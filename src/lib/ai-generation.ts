@@ -7,7 +7,6 @@ export async function generateMockImages(
   state: CoverState,
   count: number = 4
 ): Promise<GeneratedImage[]> {
-  const style = getStyleById(state.style)
   const images: GeneratedImage[] = []
 
   for (let i = 0; i < count; i++) {
