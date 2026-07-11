@@ -18,7 +18,7 @@ export async function generateMockImages(
     const ctx = canvas.getContext('2d')!
 
     // Generate procedural art based on style
-    drawProceduralArt(ctx, size, state.style, seed)
+    drawProceduralArt(ctx, size, state.style, seed, state)
 
     // Add text overlay
     drawTextOverlay(ctx, state, size)
@@ -44,11 +44,10 @@ function drawProceduralArt(
   ctx: CanvasRenderingContext2D,
   size: number,
   styleId: CoverStyle,
-  seed: number
+  seed: number,
+  state: CoverState
 ) {
   const rng = seededRandom(seed)
-
-  // Background — используем prompt для влияния на цвета
   const promptColors = extractColorsFromPrompt(state.prompt)
 
   switch (styleId) {
@@ -163,13 +162,14 @@ function drawElectronic(ctx: CanvasRenderingContext2D, size: number, rng: () => 
     ctx.stroke()
   }
 
-  // Neon glow
+  // Neon glow with prompt colors
   for (let i = 0; i < 8; i++) {
     const glow = ctx.createRadialGradient(
       rng() * size, rng() * size, 0,
       rng() * size, rng() * size, size * 0.3
     )
-    glow.addColorStop(0, `hsla(${rng() * 60 + 280}, 100%, 50%, 0.2)`)
+    const hue = promptColors[i % promptColors.length] ?? (rng() * 60 + 280)
+    glow.addColorStop(0, `hsla(${hue}, 100%, 50%, 0.2)`)
     glow.addColorStop(1, 'transparent')
     ctx.fillStyle = glow
     ctx.fillRect(0, 0, size, size)
@@ -177,9 +177,10 @@ function drawElectronic(ctx: CanvasRenderingContext2D, size: number, rng: () => 
 }
 
 function drawIndie(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
+  const baseHue = promptColors[0] ?? (rng() * 30 + 25)
   const grad = ctx.createLinearGradient(0, 0, size, size)
-  grad.addColorStop(0, `hsl(${rng() * 30 + 25}, 40%, 70%)`)
-  grad.addColorStop(1, `hsl(${rng() * 30 + 35}, 30%, 60%)`)
+  grad.addColorStop(0, `hsl(${baseHue}, 40%, 70%)`)
+  grad.addColorStop(1, `hsl(${baseHue + 10}, 30%, 60%)`)
   ctx.fillStyle = grad
   ctx.fillRect(0, 0, size, size)
 
@@ -195,12 +196,13 @@ function drawRock(ctx: CanvasRenderingContext2D, size: number, rng: () => number
   ctx.fillStyle = '#1a0a0a'
   ctx.fillRect(0, 0, size, size)
 
-  // Scratches
+  // Scratches with prompt colors
   for (let i = 0; i < 30; i++) {
     ctx.beginPath()
     ctx.moveTo(rng() * size, rng() * size)
     ctx.lineTo(rng() * size, rng() * size)
-    ctx.strokeStyle = `rgba(200, 50, 50, ${rng() * 0.3 + 0.1})`
+    const hue = promptColors[i % promptColors.length] ?? 0
+    ctx.strokeStyle = `hsla(${hue}, 70%, 50%, ${rng() * 0.3 + 0.1})`
     ctx.lineWidth = rng() * 3 + 0.5
     ctx.stroke()
   }
@@ -216,14 +218,15 @@ function drawFuturistic(ctx: CanvasRenderingContext2D, size: number, rng: () => 
   ctx.fillStyle = '#0a0f1a'
   ctx.fillRect(0, 0, size, size)
 
-  // Geometric patterns
+  // Geometric patterns with prompt colors
   for (let i = 0; i < 10; i++) {
     ctx.beginPath()
     const x = rng() * size
     const y = rng() * size
     const r = rng() * 100 + 20
     ctx.arc(x, y, r, 0, Math.PI * 2)
-    ctx.strokeStyle = `hsla(${rng() * 60 + 180}, 80%, 60%, ${rng() * 0.3 + 0.1})`
+    const hue = promptColors[i % promptColors.length] ?? (rng() * 60 + 180)
+    ctx.strokeStyle = `hsla(${hue}, 80%, 60%, ${rng() * 0.3 + 0.1})`
     ctx.lineWidth = 2
     ctx.stroke()
   }
@@ -233,7 +236,8 @@ function drawFuturistic(ctx: CanvasRenderingContext2D, size: number, rng: () => 
     ctx.beginPath()
     ctx.moveTo(rng() * size, 0)
     ctx.lineTo(rng() * size, size)
-    ctx.strokeStyle = `hsla(${rng() * 60 + 180}, 70%, 50%, ${rng() * 0.15 + 0.05})`
+    const hue = promptColors[i % promptColors.length] ?? (rng() * 60 + 180)
+    ctx.strokeStyle = `hsla(${hue}, 70%, 50%, ${rng() * 0.15 + 0.05})`
     ctx.lineWidth = rng() * 2 + 0.5
     ctx.stroke()
   }
@@ -243,14 +247,15 @@ function drawEthnic(ctx: CanvasRenderingContext2D, size: number, rng: () => numb
   ctx.fillStyle = '#1a1008'
   ctx.fillRect(0, 0, size, size)
 
-  // Ornamental circles
+  // Ornamental circles with prompt colors
   for (let i = 0; i < 5; i++) {
     const cx = rng() * size
     const cy = rng() * size
     for (let r = 20; r < 150; r += 20) {
       ctx.beginPath()
       ctx.arc(cx, cy, r, 0, Math.PI * 2)
-      ctx.strokeStyle = `hsla(${rng() * 40 + 25}, 60%, 40%, ${rng() * 0.2 + 0.1})`
+      const hue = promptColors[i % promptColors.length] ?? (rng() * 40 + 25)
+      ctx.strokeStyle = `hsla(${hue}, 60%, 40%, ${rng() * 0.2 + 0.1})`
       ctx.lineWidth = 1.5
       ctx.stroke()
     }
