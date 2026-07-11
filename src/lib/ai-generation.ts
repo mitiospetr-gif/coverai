@@ -19,7 +19,7 @@ export async function generateMockImages(
     const ctx = canvas.getContext('2d')!
 
     // Generate procedural art based on style
-    drawProceduralArt(ctx, size, state.style, seed, style?.preview || '')
+    drawProceduralArt(ctx, size, state.style, seed)
 
     // Add text overlay
     drawTextOverlay(ctx, state, size)
@@ -45,8 +45,7 @@ function drawProceduralArt(
   ctx: CanvasRenderingContext2D,
   size: number,
   styleId: CoverStyle,
-  seed: number,
-  preview: string
+  seed: number
 ) {
   const rng = seededRandom(seed)
 
