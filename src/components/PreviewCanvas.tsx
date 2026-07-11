@@ -105,37 +105,45 @@ function drawText(ctx: CanvasRenderingContext2D, state: ReturnType<typeof useCov
   let baseY = size / 2
 
   switch (textPosition) {
-    case 'top': baseY = size * 0.18; break
+    case 'top': baseY = size * 0.22; break
     case 'center': baseY = size * 0.5; break
-    case 'bottom': baseY = size * 0.82; break
+    case 'bottom': baseY = size * 0.78; break
     case 'free':
       baseX = size / 2 + state.artistOffsetX * (size / 1000)
       baseY = size * 0.5 + state.artistOffsetY * (size / 1000)
       break
   }
 
-  const scaledFontSize = Math.max(12, Math.min(fontSize, size / 6)) * (size / 1000)
+  const scaledFontSize = Math.max(14, Math.min(fontSize, size / 5)) * (size / 1000)
 
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
 
-  ctx.shadowColor = 'rgba(0,0,0,0.6)'
-  ctx.shadowBlur = 30
+  // Multi-layer shadow for depth
+  ctx.shadowColor = 'rgba(0,0,0,0.8)'
+  ctx.shadowBlur = 40
   ctx.shadowOffsetX = 0
-  ctx.shadowOffsetY = 8
+  ctx.shadowOffsetY = 6
 
   if (showArtist && artist) {
-    ctx.font = `600 ${scaledFontSize * 0.45}px Inter, sans-serif`
-    ctx.fillStyle = textColor + 'dd'
-    ctx.fillText(artist, baseX, baseY - scaledFontSize * 0.35)
+    // Artist: elegant italic, smaller, with letter spacing
+    const artistSize = scaledFontSize * 0.42
+    ctx.font = `italic 500 ${artistSize}px Inter, "Helvetica Neue", sans-serif`
+    ctx.fillStyle = textColor + 'bb'
+    ctx.letterSpacing = '0.15em'
+    ctx.fillText(artist.toUpperCase(), baseX, baseY - scaledFontSize * 0.55)
   }
 
   if (showTrack && track) {
-    ctx.font = `900 ${scaledFontSize}px Inter, sans-serif`
+    // Track: bold, large, tight tracking
+    ctx.font = `900 ${scaledFontSize}px Inter, "Helvetica Neue", sans-serif`
     ctx.fillStyle = textColor
-    ctx.fillText(track, baseX, baseY + scaledFontSize * 0.25)
+    ctx.letterSpacing = '-0.02em'
+    ctx.fillText(track, baseX, baseY + scaledFontSize * 0.15)
   }
 
+  // Reset
   ctx.shadowColor = 'transparent'
   ctx.shadowBlur = 0
+  ctx.letterSpacing = '0'
 }

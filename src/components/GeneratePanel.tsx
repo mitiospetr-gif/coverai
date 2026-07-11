@@ -1,6 +1,6 @@
 import { useCoverStore } from '@/hooks/useCoverStore'
-import { generateMockImages, buildPrompt } from '@/lib/ai-generation'
 import { useToast } from '@/hooks/useToast'
+import { generateMockImages, buildPrompt } from '@/lib/ai-generation'
 import { Sparkles, RotateCcw, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -25,7 +25,6 @@ export function GeneratePanel() {
         state.setGeneratedImages(images)
         addToast(`Сгенерировано ${images.length} вариантов!`, 'success')
       } else {
-        // Real AI integration placeholder
         addToast('Реальный AI API требует настройки ключа', 'info')
         const images = await generateMockImages(state, variantCount)
         state.setGeneratedImages(images)
@@ -46,7 +45,6 @@ export function GeneratePanel() {
         <span>AI Генерация</span>
       </div>
 
-      {/* Variant count */}
       <div>
         <label className="text-xs text-gray-500 mb-2 block">Количество вариантов</label>
         <div className="flex gap-2">
@@ -66,7 +64,6 @@ export function GeneratePanel() {
         </div>
       </div>
 
-      {/* Prompt preview */}
       <div className="bg-gray-800/30 rounded-xl p-3 border border-gray-700/30">
         <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">AI Prompt</div>
         <div className="text-xs text-gray-400 font-mono leading-relaxed line-clamp-3">
@@ -74,7 +71,6 @@ export function GeneratePanel() {
         </div>
       </div>
 
-      {/* Generate button */}
       <button
         onClick={handleGenerate}
         disabled={state.isGenerating}
@@ -93,7 +89,6 @@ export function GeneratePanel() {
         )}
       </button>
 
-      {/* Regenerate */}
       {state.generatedImages.length > 0 && (
         <button
           onClick={handleGenerate}

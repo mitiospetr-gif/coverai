@@ -48,95 +48,101 @@ function drawProceduralArt(
 ) {
   const rng = seededRandom(seed)
 
-  // Background
+  // Background — используем prompt для влияния на цвета
+  const promptColors = extractColorsFromPrompt(state.prompt)
+
   switch (styleId) {
     case 'minimal':
-      drawMinimal(ctx, size, rng)
+      drawMinimal(ctx, size, rng, promptColors)
       break
     case 'pop':
-      drawPop(ctx, size, rng)
+      drawPop(ctx, size, rng, promptColors)
       break
     case 'dark':
-      drawDark(ctx, size, rng)
+      drawDark(ctx, size, rng, promptColors)
       break
     case 'electronic':
-      drawElectronic(ctx, size, rng)
+      drawElectronic(ctx, size, rng, promptColors)
       break
     case 'indie':
-      drawIndie(ctx, size, rng)
+      drawIndie(ctx, size, rng, promptColors)
       break
     case 'rock':
-      drawRock(ctx, size, rng)
+      drawRock(ctx, size, rng, promptColors)
       break
     case 'futuristic':
-      drawFuturistic(ctx, size, rng)
+      drawFuturistic(ctx, size, rng, promptColors)
       break
     case 'ethnic':
-      drawEthnic(ctx, size, rng)
+      drawEthnic(ctx, size, rng, promptColors)
       break
     case 'mixed':
-      drawMixed(ctx, size, rng)
+      drawMixed(ctx, size, rng, promptColors)
       break
     default:
-      drawMinimal(ctx, size, rng)
+      drawMinimal(ctx, size, rng, promptColors)
   }
 }
 
-function drawMinimal(ctx: CanvasRenderingContext2D, size: number, rng: () => number) {
-  ctx.fillStyle = `hsl(${rng() * 60 + 200}, 10%, ${rng() * 10 + 90}%)`
+function drawMinimal(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
+  const baseHue = promptColors[0] ?? (rng() * 60 + 200)
+  ctx.fillStyle = `hsl(${baseHue}, 8%, ${rng() * 8 + 92}%)`
   ctx.fillRect(0, 0, size, size)
 
-  // Subtle geometric shapes
-  for (let i = 0; i < 3; i++) {
-    ctx.fillStyle = `hsla(${rng() * 60 + 200}, 20%, ${rng() * 20 + 40}%, 0.1)`
-    const x = rng() * size
-    const y = rng() * size
-    const w = rng() * size * 0.4 + 50
-    const h = rng() * size * 0.4 + 50
+  for (let i = 0; i < 5; i++) {
+    const hue = promptColors[i % promptColors.length] ?? (baseHue + rng() * 40)
+    ctx.fillStyle = `hsla(${hue}, 25%, ${rng() * 15 + 35}%, 0.08)`
+    const x = rng() * size * 0.8
+    const y = rng() * size * 0.8
+    const w = rng() * size * 0.3 + 80
+    const h = rng() * size * 0.3 + 80
     ctx.fillRect(x, y, w, h)
   }
 }
 
-function drawPop(ctx: CanvasRenderingContext2D, size: number, rng: () => number) {
+function drawPop(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
+  const c1 = promptColors[0] ?? (rng() * 60 + 300)
+  const c2 = promptColors[1] ?? (c1 + 30)
   const grad = ctx.createLinearGradient(0, 0, size, size)
-  grad.addColorStop(0, `hsl(${rng() * 60 + 300}, 80%, 60%)`)
-  grad.addColorStop(1, `hsl(${rng() * 60 + 330}, 90%, 50%)`)
+  grad.addColorStop(0, `hsl(${c1}, 85%, 55%)`)
+  grad.addColorStop(0.5, `hsl(${(c1 + c2) / 2}, 90%, 60%)`)
+  grad.addColorStop(1, `hsl(${c2}, 80%, 50%)`)
   ctx.fillStyle = grad
   ctx.fillRect(0, 0, size, size)
 
-  // Bubbles
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 25; i++) {
     ctx.beginPath()
-    ctx.arc(rng() * size, rng() * size, rng() * 40 + 10, 0, Math.PI * 2)
-    ctx.fillStyle = `hsla(${rng() * 360}, 70%, 70%, ${rng() * 0.3 + 0.1})`
+    ctx.arc(rng() * size, rng() * size, rng() * 50 + 15, 0, Math.PI * 2)
+    const hue = promptColors[i % promptColors.length] ?? (rng() * 360)
+    ctx.fillStyle = `hsla(${hue}, 75%, 65%, ${rng() * 0.25 + 0.15})`
     ctx.fill()
   }
 }
 
-function drawDark(ctx: CanvasRenderingContext2D, size: number, rng: () => number) {
-  ctx.fillStyle = '#0a0a0f'
+function drawDark(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
+  const baseHue = promptColors[0] ?? 220
+  ctx.fillStyle = '#050508'
   ctx.fillRect(0, 0, size, size)
 
-  // Light rays
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     const grad = ctx.createRadialGradient(
       rng() * size, rng() * size, 0,
-      rng() * size, rng() * size, size * 0.5
+      rng() * size, rng() * size, size * 0.6
     )
-    grad.addColorStop(0, `hsla(${rng() * 40 + 200}, 30%, 30%, 0.3)`)
+    const hue = promptColors[i % promptColors.length] ?? (baseHue + rng() * 40)
+    grad.addColorStop(0, `hsla(${hue}, 40%, 25%, 0.25)`)
     grad.addColorStop(1, 'transparent')
     ctx.fillStyle = grad
     ctx.fillRect(0, 0, size, size)
   }
 
-  // Film grain
-  for (let i = 0; i < 5000; i++) {
-    ctx.fillStyle = `rgba(255,255,255,${rng() * 0.03})`
+  for (let i = 0; i < 6000; i++) {
+    ctx.fillStyle = `rgba(255,255,255,${rng() * 0.025})`
     ctx.fillRect(rng() * size, rng() * size, 1, 1)
   }
 }
 
-function drawElectronic(ctx: CanvasRenderingContext2D, size: number, rng: () => number) {
+function drawElectronic(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
   ctx.fillStyle = '#050510'
   ctx.fillRect(0, 0, size, size)
 
@@ -170,7 +176,7 @@ function drawElectronic(ctx: CanvasRenderingContext2D, size: number, rng: () => 
   }
 }
 
-function drawIndie(ctx: CanvasRenderingContext2D, size: number, rng: () => number) {
+function drawIndie(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
   const grad = ctx.createLinearGradient(0, 0, size, size)
   grad.addColorStop(0, `hsl(${rng() * 30 + 25}, 40%, 70%)`)
   grad.addColorStop(1, `hsl(${rng() * 30 + 35}, 30%, 60%)`)
@@ -185,7 +191,7 @@ function drawIndie(ctx: CanvasRenderingContext2D, size: number, rng: () => numbe
   ctx.fillRect(0, 0, size, size)
 }
 
-function drawRock(ctx: CanvasRenderingContext2D, size: number, rng: () => number) {
+function drawRock(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
   ctx.fillStyle = '#1a0a0a'
   ctx.fillRect(0, 0, size, size)
 
@@ -206,7 +212,7 @@ function drawRock(ctx: CanvasRenderingContext2D, size: number, rng: () => number
   }
 }
 
-function drawFuturistic(ctx: CanvasRenderingContext2D, size: number, rng: () => number) {
+function drawFuturistic(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
   ctx.fillStyle = '#0a0f1a'
   ctx.fillRect(0, 0, size, size)
 
@@ -233,7 +239,7 @@ function drawFuturistic(ctx: CanvasRenderingContext2D, size: number, rng: () => 
   }
 }
 
-function drawEthnic(ctx: CanvasRenderingContext2D, size: number, rng: () => number) {
+function drawEthnic(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
   ctx.fillStyle = '#1a1008'
   ctx.fillRect(0, 0, size, size)
 
@@ -257,7 +263,7 @@ function drawEthnic(ctx: CanvasRenderingContext2D, size: number, rng: () => numb
   }
 }
 
-function drawMixed(ctx: CanvasRenderingContext2D, size: number, rng: () => number) {
+function drawMixed(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
   // Random combination
   const style = ['minimal', 'pop', 'dark', 'electronic', 'indie', 'rock', 'futuristic', 'ethnic'][Math.floor(rng() * 8)] as CoverStyle
   switch (style) {
@@ -316,6 +322,29 @@ function drawTextOverlay(ctx: CanvasRenderingContext2D, state: CoverState, size:
     ctx.textBaseline = 'middle'
     ctx.fillText(track, baseX, baseY + scaledFontSize * 0.3)
   }
+}
+
+function extractColorsFromPrompt(prompt: string): number[] {
+  const colors: number[] = []
+  const colorKeywords: Record<string, number> = {
+    'red': 0, 'красн': 0, 'ruby': 0, 'blood': 0,
+    'orange': 30, 'оранж': 30, 'amber': 30,
+    'yellow': 60, 'желт': 60, 'gold': 60, 'sun': 60,
+    'green': 120, 'зелен': 120, 'emerald': 120, 'forest': 120,
+    'cyan': 180, 'бирюз': 180, 'teal': 180,
+    'blue': 220, 'син': 220, 'navy': 220, 'ocean': 220, 'sky': 220,
+    'purple': 280, 'фиолет': 280, 'violet': 280, 'lavender': 280,
+    'pink': 320, 'розов': 320, 'magenta': 320,
+    'black': 0, 'черн': 0, 'dark': 0, 'shadow': 0,
+    'white': 0, 'бел': 0, 'light': 0, 'snow': 0,
+    'brown': 30, 'коричн': 30, 'chocolate': 30, 'wood': 30,
+    'gray': 0, 'сер': 0, 'silver': 0, 'metal': 0,
+  }
+  const lower = prompt.toLowerCase()
+  for (const [keyword, hue] of Object.entries(colorKeywords)) {
+    if (lower.includes(keyword)) colors.push(hue)
+  }
+  return colors.length > 0 ? colors : [220, 280, 120] // default indigo-purple-green
 }
 
 function seededRandom(seed: number): () => number {
