@@ -269,17 +269,16 @@ function drawEthnic(ctx: CanvasRenderingContext2D, size: number, rng: () => numb
 }
 
 function drawMixed(ctx: CanvasRenderingContext2D, size: number, rng: () => number, promptColors: number[] = []) {
-  // Random combination
   const style = ['minimal', 'pop', 'dark', 'electronic', 'indie', 'rock', 'futuristic', 'ethnic'][Math.floor(rng() * 8)] as CoverStyle
   switch (style) {
-    case 'minimal': drawMinimal(ctx, size, rng); break
-    case 'pop': drawPop(ctx, size, rng); break
-    case 'dark': drawDark(ctx, size, rng); break
-    case 'electronic': drawElectronic(ctx, size, rng); break
-    case 'indie': drawIndie(ctx, size, rng); break
-    case 'rock': drawRock(ctx, size, rng); break
-    case 'futuristic': drawFuturistic(ctx, size, rng); break
-    case 'ethnic': drawEthnic(ctx, size, rng); break
+    case 'minimal': drawMinimal(ctx, size, rng, promptColors); break
+    case 'pop': drawPop(ctx, size, rng, promptColors); break
+    case 'dark': drawDark(ctx, size, rng, promptColors); break
+    case 'electronic': drawElectronic(ctx, size, rng, promptColors); break
+    case 'indie': drawIndie(ctx, size, rng, promptColors); break
+    case 'rock': drawRock(ctx, size, rng, promptColors); break
+    case 'futuristic': drawFuturistic(ctx, size, rng, promptColors); break
+    case 'ethnic': drawEthnic(ctx, size, rng, promptColors); break
   }
 }
 
