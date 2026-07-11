@@ -3,7 +3,7 @@ import { aspectRatios } from '@/lib/ratios'
 import { Ratio, Lock } from 'lucide-react'
 
 export function AspectRatioSelector() {
-  const { aspectRatio, setAspectRatio, width, setHeight } = useCoverStore()
+  const { aspectRatio, setAspectRatio, width } = useCoverStore()
 
   const handleRatioChange = (ratioId: string) => {
     setAspectRatio(ratioId)

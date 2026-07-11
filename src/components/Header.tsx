@@ -1,4 +1,4 @@
-import { Image, Github, Heart } from 'lucide-react'
+import { Image, Github } from 'lucide-react'
 
 export function Header() {
   return (

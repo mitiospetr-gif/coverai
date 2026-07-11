@@ -1,7 +1,7 @@
 import { useCoverStore } from '@/hooks/useCoverStore'
 import { exportCover } from '@/lib/generation'
 import { useToast } from '@/hooks/useToast'
-import { Download, FileImage, Settings2 } from 'lucide-react'
+import { Download, Settings2 } from 'lucide-react'
 import { useState } from 'react'
 
 export function ExportPanel() {
