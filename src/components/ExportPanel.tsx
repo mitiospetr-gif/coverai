@@ -1,23 +1,23 @@
 import { useCoverStore } from '@/hooks/useCoverStore'
-import { exportCover } from '@/lib/generation'
+import { exportCover } from '@/lib/export'
 import { useToast } from '@/hooks/useToast'
-import { Download, Settings2 } from 'lucide-react'
-import { useState } from 'react'
+import { Download, Settings2, FileImage } from 'lucide-react'
 
 export function ExportPanel() {
   const state = useCoverStore()
   const { addToast } = useToast()
-  const [isExporting, setIsExporting] = useState(false)
 
   const handleExport = async () => {
-    setIsExporting(true)
+    if (state.generatedImages.length === 0) {
+      addToast('Сначала сгенерируйте обложку', 'error')
+      return
+    }
+
     try {
       await exportCover(state)
-      addToast('Обложка успешно сохранена!', 'success')
-    } catch (error) {
+      addToast('Обложка сохранена!', 'success')
+    } catch {
       addToast('Ошибка при экспорте', 'error')
-    } finally {
-      setIsExporting(false)
     }
   }
 
@@ -28,27 +28,25 @@ export function ExportPanel() {
         <span>Экспорт</span>
       </div>
 
-      {/* Format */}
       <div>
         <label className="text-xs text-gray-500 mb-2 block">Формат</label>
         <div className="flex gap-2">
-          {(['png', 'jpg'] as const).map((format) => (
+          {(['png', 'jpg'] as const).map((fmt) => (
             <button
-              key={format}
-              onClick={() => state.setExportFormat(format)}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                state.exportFormat === format
-                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
-                  : 'bg-gray-800/50 text-gray-400 border border-gray-700/30 hover:bg-gray-700/50'
+              key={fmt}
+              onClick={() => state.setExportFormat(fmt)}
+              className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all border ${
+                state.exportFormat === fmt
+                  ? 'bg-indigo-600 text-white border-indigo-600'
+                  : 'bg-gray-800/50 text-gray-400 border-gray-700/30 hover:border-gray-600/50'
               }`}
             >
-              {format.toUpperCase()}
+              {fmt.toUpperCase()}
             </button>
           ))}
         </div>
       </div>
 
-      {/* DPI */}
       <div>
         <label className="text-xs text-gray-500 mb-2 block">DPI</label>
         <div className="flex gap-2">
@@ -56,10 +54,10 @@ export function ExportPanel() {
             <button
               key={dpi}
               onClick={() => state.setExportDpi(dpi)}
-              className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
+              className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all border ${
                 state.exportDpi === dpi
-                  ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-600/30'
-                  : 'bg-gray-800/50 text-gray-500 border border-gray-700/30 hover:bg-gray-700/50'
+                  ? 'bg-indigo-600/20 text-indigo-400 border-indigo-600/30'
+                  : 'bg-gray-800/50 text-gray-500 border-gray-700/30 hover:border-gray-600/50'
               }`}
             >
               {dpi}
@@ -68,7 +66,6 @@ export function ExportPanel() {
         </div>
       </div>
 
-      {/* Quality (JPG only) */}
       {state.exportFormat === 'jpg' && (
         <div>
           <div className="flex items-center justify-between mb-2">
@@ -86,20 +83,21 @@ export function ExportPanel() {
         </div>
       )}
 
-      {/* Export Button */}
+      <div className="text-xs text-gray-600 space-y-1">
+        <div className="flex items-center gap-2">
+          <FileImage className="w-3 h-3" />
+          <span>RGB, {state.exportDpi} DPI</span>
+        </div>
+        <div>Размер: ~{((state.size * state.size * 4) / 1024 / 1024).toFixed(1)} MB (PNG)</div>
+      </div>
+
       <button
         onClick={handleExport}
-        disabled={isExporting}
-        className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="btn-primary w-full flex items-center justify-center gap-2"
       >
-        <Download className={`w-4 h-4 ${isExporting ? 'animate-bounce' : ''}`} />
-        {isExporting ? 'Экспорт...' : 'Скачать обложку'}
+        <Download className="w-4 h-4" />
+        Download
       </button>
-
-      {/* Info */}
-      <div className="text-[10px] text-gray-600 text-center">
-        Размер файла: ~{(state.width * state.height * 4 / 1024 / 1024).toFixed(1)} MB (PNG)
-      </div>
     </div>
   )
 }

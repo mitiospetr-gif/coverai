@@ -1,42 +1,58 @@
 import { create } from 'zustand'
-import type { CoverState, TextPosition } from '@/types'
+import type { CoverState, CoverStyle, TextPosition, ExportFormat, AiProvider } from '@/types'
 
 interface CoverActions {
   setArtist: (artist: string) => void
   setTrack: (track: string) => void
-  setWidth: (width: number) => void
-  setHeight: (height: number) => void
-  setAspectRatio: (ratio: string) => void
-  setStyle: (style: string) => void
-  setColor: (color: string) => void
+  setPrompt: (prompt: string) => void
+  setReferenceImage: (image: string | null) => void
+  setSize: (size: number) => void
+  setCustomSize: (size: number | null) => void
+  setStyle: (style: CoverStyle) => void
   setFontSize: (size: number) => void
-  setTextPosition: (position: TextPosition) => void
   setTextColor: (color: string) => void
-  setBackgroundImage: (image: string | null) => void
+  setTextPosition: (position: TextPosition) => void
+  setArtistOffset: (x: number, y: number) => void
+  setTrackOffset: (x: number, y: number) => void
+  setShowArtist: (show: boolean) => void
+  setShowTrack: (show: boolean) => void
+  setAiProvider: (provider: AiProvider) => void
+  setApiKey: (key: string) => void
   setIsGenerating: (generating: boolean) => void
-  setExportFormat: (format: 'png' | 'jpg') => void
+  setGeneratedImages: (images: CoverState['generatedImages']) => void
+  addGeneratedImage: (image: CoverState['generatedImages'][0]) => void
+  setSelectedVariant: (index: number) => void
+  setExportFormat: (format: ExportFormat) => void
   setExportDpi: (dpi: number) => void
   setExportQuality: (quality: number) => void
-  setDimensions: (width: number, height: number) => void
   reset: () => void
 }
 
 const defaultState: CoverState = {
   artist: '',
   track: '',
-  width: 1280,
-  height: 720,
-  aspectRatio: '16:9',
-  style: 'gradient',
-  color: 'indigo',
-  fontSize: 48,
-  textPosition: 'center',
+  prompt: '',
+  referenceImage: null,
+  size: 3000,
+  customSize: null,
+  style: 'minimal',
+  fontSize: 80,
   textColor: '#ffffff',
-  backgroundImage: null,
+  textPosition: 'center',
+  artistOffsetX: 0,
+  artistOffsetY: 0,
+  trackOffsetX: 0,
+  trackOffsetY: 0,
+  showArtist: true,
+  showTrack: true,
+  aiProvider: 'mock',
+  apiKey: '',
   isGenerating: false,
+  generatedImages: [],
+  selectedVariant: 0,
   exportFormat: 'png',
-  exportDpi: 72,
-  exportQuality: 90,
+  exportDpi: 300,
+  exportQuality: 95,
 }
 
 export const useCoverStore = create<CoverState & CoverActions>((set) => ({
@@ -44,19 +60,28 @@ export const useCoverStore = create<CoverState & CoverActions>((set) => ({
 
   setArtist: (artist) => set({ artist }),
   setTrack: (track) => set({ track }),
-  setWidth: (width) => set({ width }),
-  setHeight: (height) => set({ height }),
-  setAspectRatio: (aspectRatio) => set({ aspectRatio }),
+  setPrompt: (prompt) => set({ prompt }),
+  setReferenceImage: (referenceImage) => set({ referenceImage }),
+  setSize: (size) => set({ size }),
+  setCustomSize: (customSize) => set({ customSize }),
   setStyle: (style) => set({ style }),
-  setColor: (color) => set({ color }),
   setFontSize: (fontSize) => set({ fontSize }),
-  setTextPosition: (textPosition) => set({ textPosition }),
   setTextColor: (textColor) => set({ textColor }),
-  setBackgroundImage: (backgroundImage) => set({ backgroundImage }),
+  setTextPosition: (textPosition) => set({ textPosition }),
+  setArtistOffset: (x, y) => set({ artistOffsetX: x, artistOffsetY: y }),
+  setTrackOffset: (x, y) => set({ trackOffsetX: x, trackOffsetY: y }),
+  setShowArtist: (showArtist) => set({ showArtist }),
+  setShowTrack: (showTrack) => set({ showTrack }),
+  setAiProvider: (aiProvider) => set({ aiProvider }),
+  setApiKey: (apiKey) => set({ apiKey }),
   setIsGenerating: (isGenerating) => set({ isGenerating }),
+  setGeneratedImages: (generatedImages) => set({ generatedImages }),
+  addGeneratedImage: (image) => set((state) => ({
+    generatedImages: [...state.generatedImages, image],
+  })),
+  setSelectedVariant: (selectedVariant) => set({ selectedVariant }),
   setExportFormat: (exportFormat) => set({ exportFormat }),
   setExportDpi: (exportDpi) => set({ exportDpi }),
   setExportQuality: (exportQuality) => set({ exportQuality }),
-  setDimensions: (width, height) => set({ width, height }),
   reset: () => set({ ...defaultState }),
 }))

@@ -1,12 +1,13 @@
 import { Header } from '@/components/Header'
-import { InputPanel } from '@/components/InputPanel'
-import { AspectRatioSelector } from '@/components/AspectRatioSelector'
-import { DimensionInputs } from '@/components/DimensionInputs'
-import { StyleGrid } from '@/components/StyleGrid'
-import { TextEditorToolbar } from '@/components/TextEditorToolbar'
-import { CanvasPreview } from '@/components/CanvasPreview'
-import { GalleryPanel } from '@/components/GalleryPanel'
+import { TextInputs } from '@/components/TextInputs'
+import { SizeSelector } from '@/components/SizeSelector'
+import { StyleSelector } from '@/components/StyleSelector'
+import { TextEditor } from '@/components/TextEditor'
+import { GeneratePanel } from '@/components/GeneratePanel'
+import { VariantGallery } from '@/components/VariantGallery'
+import { PreviewCanvas } from '@/components/PreviewCanvas'
 import { ExportPanel } from '@/components/ExportPanel'
+import { AiSettings } from '@/components/AiSettings'
 import { Toast } from '@/components/Toast'
 
 function App() {
@@ -17,19 +18,20 @@ function App() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-3 space-y-4">
-            <InputPanel />
-            <AspectRatioSelector />
-            <DimensionInputs />
-            <StyleGrid />
+            <TextInputs />
+            <SizeSelector />
+            <StyleSelector />
+            <AiSettings />
           </div>
 
-          <div className="lg:col-span-6">
-            <CanvasPreview />
+          <div className="lg:col-span-6 space-y-4">
+            <PreviewCanvas />
+            <VariantGallery />
           </div>
 
           <div className="lg:col-span-3 space-y-4">
-            <TextEditorToolbar />
-            <GalleryPanel />
+            <TextEditor />
+            <GeneratePanel />
             <ExportPanel />
           </div>
         </div>

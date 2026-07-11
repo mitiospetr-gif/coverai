@@ -1,58 +1,69 @@
+export type CoverStyle = 
+  | 'minimal'
+  | 'pop'
+  | 'dark'
+  | 'electronic'
+  | 'indie'
+  | 'rock'
+  | 'futuristic'
+  | 'ethnic'
+  | 'mixed'
+
+export type ExportFormat = 'png' | 'jpg'
+export type TextPosition = 'top' | 'center' | 'bottom' | 'free'
+export type AiProvider = 'mock' | 'puter' | 'replicate' | 'fal'
+
 export interface CoverState {
   artist: string
   track: string
-  width: number
-  height: number
-  aspectRatio: string
-  style: string
-  color: string
+  prompt: string
+  referenceImage: string | null
+  size: number
+  customSize: number | null
+  style: CoverStyle
   fontSize: number
-  textPosition: TextPosition
   textColor: string
-  backgroundImage: string | null
+  textPosition: TextPosition
+  artistOffsetX: number
+  artistOffsetY: number
+  trackOffsetX: number
+  trackOffsetY: number
+  showArtist: boolean
+  showTrack: boolean
+  aiProvider: AiProvider
+  apiKey: string
   isGenerating: boolean
-  exportFormat: 'png' | 'jpg'
+  generatedImages: GeneratedImage[]
+  selectedVariant: number
+  exportFormat: ExportFormat
   exportDpi: number
   exportQuality: number
 }
 
-export type TextPosition = 
-  | 'top-left' | 'top-center' | 'top-right'
-  | 'center-left' | 'center' | 'center-right'
-  | 'bottom-left' | 'bottom-center' | 'bottom-right'
-
-export interface AspectRatio {
+export interface GeneratedImage {
   id: string
-  label: string
-  ratio: number
+  url: string
+  seed: number
+  style: CoverStyle
+  createdAt: number
+}
+
+export interface StyleOption {
+  id: CoverStyle
+  name: string
   description: string
-}
-
-export interface Preset {
-  id: string
-  name: string
-  width: number
-  height: number
-  platform: string
-  icon: string
-}
-
-export interface Style {
-  id: string
-  name: string
   preview: string
-  description: string
-}
-
-export interface ColorOption {
-  id: string
-  name: string
-  hex: string
-  gradient: string
+  promptModifier: string
 }
 
 export interface ToastMessage {
   id: string
   message: string
   type: 'success' | 'error' | 'info'
+}
+
+export interface SizePreset {
+  value: number
+  label: string
+  platform: string
 }

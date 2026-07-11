@@ -10,11 +10,11 @@ export function Header() {
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight">CoverAI</h1>
-            <p className="text-xs text-gray-500">Генератор обложек для музыки</p>
+            <p className="text-xs text-gray-500">AI-генератор обложек для музыки</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-600 font-mono">v2.0</span>
+          <span className="text-xs text-gray-600 font-mono bg-gray-800/50 px-2 py-1 rounded-lg">v3.0</span>
           <a
             href="https://github.com"
             target="_blank"
