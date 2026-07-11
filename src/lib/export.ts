@@ -69,8 +69,8 @@ function drawTextOverlay(ctx: CanvasRenderingContext2D, state: CoverState, size:
     case 'center': baseY = size * 0.5; break
     case 'bottom': baseY = size * 0.78; break
     case 'free':
-      baseX = size / 2 + state.artistOffsetX * (size / 1000)
-      baseY = size * 0.5 + state.artistOffsetY * (size / 1000)
+      baseX = size / 2 + state.artistOffsetX
+      baseY = size * 0.5 + state.artistOffsetY
       break
   }
 
@@ -79,13 +79,13 @@ function drawTextOverlay(ctx: CanvasRenderingContext2D, state: CoverState, size:
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
 
-  // Deep shadow for readability
+  // Глубокая тень
   ctx.shadowColor = 'rgba(0,0,0,0.7)'
   ctx.shadowBlur = 35
   ctx.shadowOffsetX = 0
   ctx.shadowOffsetY = 5
 
-  // Artist: elegant italic, uppercase, spaced
+  // Artist: курсив, uppercase, с отступом
   if (showArtist && artist) {
     const artistSize = scaledFontSize * 0.45
     ctx.font = `italic 500 ${artistSize}px Inter, "Helvetica Neue", Arial, sans-serif`
@@ -93,7 +93,7 @@ function drawTextOverlay(ctx: CanvasRenderingContext2D, state: CoverState, size:
     ctx.fillText(artist.toUpperCase(), baseX, baseY - scaledFontSize * 0.55)
   }
 
-  // Track: bold, tight tracking
+  // Track: жирный
   if (showTrack && track) {
     ctx.font = `900 ${scaledFontSize}px Inter, "Helvetica Neue", Arial, sans-serif`
     ctx.fillStyle = textColor
