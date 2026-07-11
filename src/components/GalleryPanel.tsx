@@ -1,6 +1,7 @@
 import { presets } from '@/lib/presets'
 import { useCoverStore } from '@/hooks/useCoverStore'
 import { aspectRatios, calculateHeight } from '@/lib/ratios'
+import React from 'react'
 import { LayoutGrid, Youtube, Music, Smartphone, Image, Cloud, Disc } from 'lucide-react'
 
 const iconMap: Record<string, React.ReactNode> = {
